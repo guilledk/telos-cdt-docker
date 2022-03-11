@@ -1,0 +1,18 @@
+FROM ubuntu:18.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install -y \
+        git \
+        wget \
+        make \
+        cmake \
+        build-essential
+
+RUN wget https://github.com/EOSIO/eosio.cdt/releases/download/v1.4.1/eosio.cdt-1.4.1.x86_64.deb && \
+    apt-get install -y ./eosio.cdt-1.4.1.x86_64.deb
+
+RUN mkdir -p /root/target
+
+WORKDIR /root/target
