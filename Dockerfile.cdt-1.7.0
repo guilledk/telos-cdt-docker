@@ -7,8 +7,16 @@ RUN apt-get update && \
         git \
         wget \ 
         make \
-        cmake
+        gnupg \
+        ca-certificates \
+        apt-transport-https \
+        software-properties-common 
 
+RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | apt-key add - 
+
+RUN apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main' && apt-get update
+
+RUN apt-get install -y cmake
 
 WORKDIR /root
 
