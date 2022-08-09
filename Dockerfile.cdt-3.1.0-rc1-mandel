@@ -1,0 +1,46 @@
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update
+RUN apt-get install -y git curl python3
+
+#
+# Install CDT v3.0.0-rc1
+#
+RUN curl -LO https://github.com/eosnetworkfoundation/mandel.cdt/releases/download/v3.0.0-rc1/cdt_3.0.0-rc1_amd64.deb
+RUN dpkg -i cdt_3.0.0-rc1_amd64.deb 
+
+#
+# Build Mandel from sources, and set envoirment vars to fix wonky cmake modules
+# Not needed if you use
+# -DBUILD_TESTS=no
+#
+WORKDIR /root
+RUN git clone https://github.com/eosnetworkfoundation/mandel.git
+WORKDIR /root/mandel
+RUN git checkout v3.1.0-rc1 && git submodule update --init --recursive
+RUN ./scripts/install_deps.sh
+
+RUN mkdir -p /root/mandel-deps
+RUN mkdir -p /root/mandel-build
+
+RUN ./scripts/pinned_build.sh /root/mandel-deps /root/mandel-build 4
+
+RUN mkdir -p /root/target
+
+ENV eosio_DIR /root/mandel-build 
+ENV BOOST_ROOT /root/mandel-deps/boost_1_70_0/bin
+ENV libff /root/mandel-build/libraries/fc/libraries/ff/libff/libff.a
+
+# ENV LLVM_DIR /root/mandel-deps/llvm-7.1.0/lib/cmake/llvm
+# 
+# ENV CC /root/mandel-deps/clang-11.0.1/bin/clang
+# ENV CXX /root/mandel-deps/clang-11.0.1/bin/clang++
+# 
+# ENV CMAKE_CXX_FLAGS -std=c++17 -stdlib=libc++
+# ENV CMAKE_EXE_LINKER_FLAGS -stdlib=libc++ -lc++abi
+# ENV CMAKE_CXX_COMPILER /root/mandel-deps/clang-11.0.1/bin/clang++
+# ENV CMAKE_LIBRARY_PATH /root/mandel-deps/clang-11.0.1/lib
+
+WORKDIR /root/target
