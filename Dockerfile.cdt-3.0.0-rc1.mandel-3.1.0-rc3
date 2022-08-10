@@ -1,0 +1,44 @@
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install -y  \
+        build-essential             \
+        cmake                       \
+        curl                        \
+        git                         \
+        libboost-all-dev            \
+        libcurl4-openssl-dev        \
+        libgmp-dev                  \
+        libssl-dev                  \
+        libusb-1.0-0-dev            \
+        llvm-11-dev                 \
+        pkg-config
+
+WORKDIR /root
+
+RUN git clone https://github.com/eosnetworkfoundation/mandel.git
+
+WORKDIR /root/mandel
+
+RUN git checkout v3.1.0-rc3 && git submodule update --init --recursive
+
+RUN mkdir build
+
+WORKDIR /root/mandel/build
+
+RUN cmake -DCMAKE_BUILD_TYPE=Release ..
+
+RUN make -j 4 package
+
+RUN curl -L -O https://github.com/eosnetworkfoundation/mandel.cdt/releases/download/v3.0.0-rc1/cdt_3.0.0-rc1_amd64.deb && \
+    dpkg -i cdt_3.0.0-rc1_amd64.deb mandel-dev-3.1.0-rc3-ubuntu20.04-x86_64.deb
+
+
+RUN mkdir /root/target
+
+WORKDIR /root/target
+
+
+
