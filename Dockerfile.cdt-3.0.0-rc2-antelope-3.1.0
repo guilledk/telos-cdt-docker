@@ -18,27 +18,26 @@ RUN apt-get update && \
 
 WORKDIR /root
 
-RUN git clone https://github.com/eosnetworkfoundation/mandel.git
+RUN git clone https://github.com/AntelopeIO/leap.git
 
-WORKDIR /root/mandel
+WORKDIR /root/leap
 
-RUN git checkout v3.1.0-rc3 && git submodule update --init --recursive
+RUN git checkout v3.1.0 && git submodule update --init --recursive
 
 RUN mkdir build
 
-WORKDIR /root/mandel/build
+WORKDIR /root/leap/build
 
 RUN cmake -DCMAKE_BUILD_TYPE=Release ..
 
-RUN make -j 4 package
+RUN make -j 2 package
 
-RUN curl -L -O https://github.com/eosnetworkfoundation/mandel.cdt/releases/download/v3.0.0-rc1/cdt_3.0.0-rc1_amd64.deb && \
-    dpkg -i cdt_3.0.0-rc1_amd64.deb mandel-dev-3.1.0-rc3-ubuntu20.04-x86_64.deb
+RUN curl -L -O https://github.com/AntelopeIO/cdt/releases/download/v3.0.0-rc2/cdt_3.0.0-rc2_amd64.deb && \
+    dpkg -i \
+        cdt_3.0.0-rc2_amd64.deb\
+        leap-dev-3.1.0-ubuntu20.04-x86_64.deb
 
 
 RUN mkdir /root/target
 
 WORKDIR /root/target
-
-
-
