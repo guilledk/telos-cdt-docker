@@ -16,3 +16,5 @@ RUN wget https://github.com/EOSIO/eosio.cdt/releases/download/v1.4.1/eosio.cdt-1
 RUN mkdir -p /root/target
 
 WORKDIR /root/target
+
+ENV eosio_DIR /usr/opt/eosio.cdt/1.4.1/lib/cmake/eosio.cdt

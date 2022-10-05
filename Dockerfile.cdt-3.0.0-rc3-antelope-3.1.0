@@ -32,12 +32,15 @@ RUN cmake -DCMAKE_BUILD_TYPE=Release ..
 
 RUN make -j 2 package
 
-RUN curl -L -O https://github.com/AntelopeIO/cdt/releases/download/v3.0.0-rc2/cdt_3.0.0-rc2_amd64.deb && \
+RUN curl -L -O https://github.com/AntelopeIO/cdt/releases/download/v3.0.0-rc3/cdt_3.0.0-rc3_amd64.deb && \
     dpkg -i \
-        cdt_3.0.0-rc2_amd64.deb\
+        cdt_3.0.0-rc3_amd64.deb \
+        leap-3.1.0-ubuntu20.04-x86_64.deb \
         leap-dev-3.1.0-ubuntu20.04-x86_64.deb
 
 
 RUN mkdir /root/target
 
 WORKDIR /root/target
+
+ENV PATH $PATH:/usr/opt/cdt/3.0.0-rc3/bin
