@@ -26,5 +26,3 @@ RUN curl -L -O https://github.com/AntelopeIO/cdt/releases/download/v4.0.0/cdt_4.
 RUN mkdir /root/target
 
 WORKDIR /root/target
-
-ENV PATH $PATH:/usr/opt/cdt/3.0.1/bin
